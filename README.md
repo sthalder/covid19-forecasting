@@ -27,12 +27,67 @@ Data was taken for India, and the preliminary plots were visualized. Data was fr
 not surprising to see that there is an increasing trend in the data. Post the initial few days, the
 number of cases has risen exponentially (which already suggests non-stationarity). The augmented
 Dickey Fuller test results in a p-value of 0.99, and this implies non-stationarity (failed to reject H0).
+
 By intuition, there cannot be a seasonal component as now (and hopefully will not be in the future!).
 The ACF suggests slow decay, giving way to a necessity of an ARIMA component, including perhaps a
 difference operator.
+
 A differencing of the first order suggests that the mean looks relatively stable. There might be nonconstant variance but the ADF test results in a p-value of 0.01, which is satisfactory. We could
 conclude that the data is relatively stationary. This makes the order d = 2.
-The new dataset was created with the difference, and once again plotted to visualize the ACF and
-PACF plots. These provide certain guidelines on the order of p and q, based on which a model could
-be fit on the dataset.
 
+The new dataset was created with the difference, and once again plotted to visualize the ACF and
+PACF plots.
+
+# R Shiny Application
+
+To perform a similar analysis as of that taken for one country, India, the team built an interactive RShiny dashboard that provides insight into the time-series and modelling flexibility. The functionality
+of the app is as explained below -
+
+## Data Tab
+
+This tab helps us understand the original data in detail. There are 2 filters in this tab:
+- ‘Select a country’ – To choose the country for the COVID 19 forecasts (Default: Afghanistan)
+- ‘Select number of rows’ – To choose the number of rows of raw data to be displayed. This
+will help in viewing cases and fatalities for a country at a date level. (Default: 10)
+
+There are 3 plots in addition to the display of raw data in this tab. The first plot shows the data as a
+time series object for us to understand the pattern in data. The ACF and the PACF plots are displayed
+below to understand the lag auto-correlations. These plots also help in building our own model in
+the next tab where we have an option to build our own model.
+
+## Model Summary Tab
+
+This tab has an option to either go with the model from the auto.arima function or to build a model
+by specifying the values of p, d, and q. Auto.arima is chosen to be the default option as this will give
+a starting reference for further adjustments. The default value for building the model is (0,0,0) and
+the model will not accept any negative values as input for the values of p, d, and q. Once we make
+the required choices, the model summary and the results of the Box-Ljung test are displayed in the
+side panel. The former will provide the coefficients of the AR and MA parts of the model and the
+latter will check for autocorrelation in the time series residuals.
+In addition to this, the residual plots are displayed for diagnostics to check if residuals are
+uncorrelated, is stationary and are normally distributed. The model fit values are plotted with the
+data for a comparison of how well the model performs.
+
+## Forecast Tab
+
+This tab focusses on generating forecasts from the model built. There is an input field to enter the
+number of days into future that we want to forecast and based on this, the forecast is generated
+along with the 80% and 95% confidence bands. One can notice how the width of the band increases
+when the days of forecast to be included increases.
+
+In addition to this plot, we also have a table in the side panel which shows the values of the forecasts
+along with the values for upper and lower bands for 80% and 95% confidence. The minimum number
+of days to look at the forecast is set to 0 and the maximum number is set to 30.
+
+The model predicts the increase in the total number of cases over days. This increasing trend suggests the path of the disease if no remedial measures are undertaken,
+suggesting the consequences of the inaction. As more and more data are added, one could compare
+how the model performs and how the growth rate varies.
+
+The scalable R-Shiny application serves as a good reference and starting point to building
+comprehensive models for other countries. While better models might be fit and better diagnostics
+may be performed, the dashboard allows for a quick starting point and if not, a simple model that
+serves the purpose.
+
+One could improve the models and the forecasts by choosing other measures of making a model
+stationarity (like log transform, moving average) and with advanced modelling approaches (ARIMA
+with other predictors). 
